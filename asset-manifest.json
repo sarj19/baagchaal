@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/baagchaal/static/css/main.6a00d54b.css",
+    "main.js": "/baagchaal/static/js/main.8e5702b1.js",
+    "static/js/787.c4e7f8f9.chunk.js": "/baagchaal/static/js/787.c4e7f8f9.chunk.js",
+    "static/media/tiger.svg": "/baagchaal/static/media/tiger.494cd006882eeace819591cc115c0a6e.svg",
+    "static/media/goat.svg": "/baagchaal/static/media/goat.5e93aa39ef431f26c8880b8ae3f4c5d3.svg",
+    "index.html": "/baagchaal/index.html",
+    "main.6a00d54b.css.map": "/baagchaal/static/css/main.6a00d54b.css.map",
+    "main.8e5702b1.js.map": "/baagchaal/static/js/main.8e5702b1.js.map",
+    "787.c4e7f8f9.chunk.js.map": "/baagchaal/static/js/787.c4e7f8f9.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6a00d54b.css",
+    "static/js/main.8e5702b1.js"
+  ]
+}
