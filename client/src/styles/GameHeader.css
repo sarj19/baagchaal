@@ -1,0 +1,39 @@
+.pill.turnContainer {
+  margin: 0 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 40px;
+  min-height: 40px;
+}
+
+.hasturn > img {
+  font-weight: 800;
+}
+
+.hasturn {
+  font-weight: 800;
+}
+
+.notaturn {
+  font-weight: 200;
+}
+
+.notaturn,
+.hasturn {
+  display: flex;
+  align-items: center;
+  color: black;
+  padding: 0 20px;
+}
+
+.messageBanner {
+  display: flex;
+  font-weight: 800;
+  color: red;
+  align-items: center;
+}
+
+.messageBanner > div {
+  margin: 0 10px;
+}
