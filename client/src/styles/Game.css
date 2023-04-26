@@ -1,0 +1,40 @@
+.gameContainer {
+  max-width: 700px;
+  max-height: 700px;
+  display: contents;
+}
+
+.title {
+  text-align: center;
+}
+
+.content {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+.gameStatusContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.turn {
+  margin-top: 40px;
+}
+
+.goatCount {
+  margin-left: 20px;
+  margin-bottom: 40px;
+  font-size: 28px;
+  display: flex;
+}
+
+.boardContainer {
+  margin: 0 auto;
+}
+
+.boardContainer > canvas,
+.boardContainer > img {
+  position: absolute;
+}

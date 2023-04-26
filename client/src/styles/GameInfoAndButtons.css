@@ -1,0 +1,21 @@
+.gameInfoAndButtonsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.gameInfoAndButtonsContainerFixed {
+  display: inline-flex;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  gap: 1px;
+}
+
+.gameInfoAndButtonsContainerFixed > * {
+  display: inline-flex;
+  margin: 2px 3px;
+}
+.gameInfoAndButtonsContainerFixed > *:nth-child(2) {
+  flex-grow: 1;
+}
