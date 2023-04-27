@@ -33,7 +33,7 @@ export const router = createBrowserRouter(
       loader: (): ResumeGameData => {
         return {
           gameType: 'bot_scored', // "bot_random",
-          designation: 'goat', // Math.random() <= 0.5 ? 'goat' : 'tiger',
+          designation: Math.random() <= 0.5 ? 'goat' : 'tiger',
         };
       },
     },
