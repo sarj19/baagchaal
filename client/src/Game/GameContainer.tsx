@@ -2,6 +2,7 @@ import '../styles/Game.css';
 
 import React, { useEffect, useReducer, useState } from 'react';
 
+import useGameContext from '../reducers/useGameContext';
 import Debug from './Debug';
 import Game from './Game';
 import GameInfoAndButtons from './GameStatus/GameInfoAndButtons';
@@ -14,6 +15,7 @@ import useInitializeStates from './utils/useInitializeStates';
 export function GameContainer() {
   const [[size, isPotrait], setSizeProps] = useState(getBoardSizeProps());
   const stateReducer = useReducer(gameStateReducer, initialState);
+  const { debug } = useGameContext()[0];
 
   useInitializeStates(stateReducer[1]);
 
@@ -34,7 +36,7 @@ export function GameContainer() {
       <div className="content">
         <GameStateContext.Provider value={stateReducer}>
           <div>
-            <Debug />
+            {debug && <Debug />}
             <GameHeader />
             <Game boardSize={size} />
           </div>

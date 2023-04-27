@@ -21,6 +21,7 @@ export type GameContext = {
   designation?: PieceType;
   winner?: PieceType;
   hint: boolean;
+  debug: boolean;
 };
 
 export type GameContextActions =

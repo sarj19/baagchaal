@@ -2,6 +2,7 @@ import { GameContext, GameContextActions } from '../common/types';
 
 export const initialState: GameContext = {
   hint: false,
+  debug: false, 
 };
 
 export function gameContextReducer(

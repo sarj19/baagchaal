@@ -4,8 +4,6 @@ import { Position } from '../common/types';
 import useGameContext from '../reducers/useGameContext';
 import useGameState from './reducers/useGameState';
 
-const DEBUG = false;
-
 export default function Debug() {
   const context = useGameContext()[0];
   const state = useGameState()[0];
@@ -13,7 +11,6 @@ export default function Debug() {
   const prevContext = useRef(context);
 
   useEffect(() => {
-    if (!DEBUG) return;
     console.debug('=======DEBUG=======', 'turn', state.getTurn());
     if (prevContext.current != context) {
       for (let prop in context) {
