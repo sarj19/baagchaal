@@ -1,13 +1,14 @@
 import { GameState, PieceType, Position } from '../../common/types';
-import { adjancentPositions } from './adjancentPositions';
 import { canTigerEatGoat } from './canTigerEatGoat';
-import { isAllGoatsPlayed } from './goatsPlayed';
+import { isAllGoatsPlayed } from './goats';
+import { isTurn } from './turn';
+import { adjancentPositions } from './validPositions';
 
 export function getWinner(state: GameState): PieceType | null {
-  if (state.getTurn() === "goat" && checkIfGoatLost(state)) {
-    return "tiger";
-  } else if (state.getTurn() === "tiger" && checkIfTigerLost(state)) {
-    return "goat";
+  if (isTurn(state, 'goat') && checkIfGoatLost(state)) {
+    return 'tiger';
+  } else if (isTurn(state, 'tiger') && checkIfTigerLost(state)) {
+    return 'goat';
   }
   return null;
 }
@@ -56,6 +57,6 @@ function checkIfGoatLost(state: GameState) {
   return isAllGoatsPlayed(state);
 }
 
-function isOccupied(state: GameState, position:Position) {
+function isOccupied(state: GameState, position: Position) {
   return state.goats.includes(position) || state.tigers.includes(position);
 }

@@ -4,6 +4,7 @@ import { Position } from '../../common/types';
 import useGameContext from '../../reducers/useGameContext';
 import useGameState from '../reducers/useGameState';
 import getHintHighlightPositions from '../utils/getHintHighlightPositions';
+import { isTurn } from '../utils/turn';
 import GoatPiece from './GoatPiece';
 import TigerPiece from './TigerPiece';
 
@@ -19,7 +20,7 @@ export default function BoradPieces({ boardSize }: { boardSize: number }) {
 
   const pieceClicked = (position: Position | null) => {
     if (winner != null) return;
-    if (state.getTurn() == designation) {
+    if (isTurn(state, designation)) {
       stateDispatch({ type: 'select', value: position });
     } else {
       stateDispatch({ type: 'selected_without_turn' });
@@ -49,7 +50,7 @@ export default function BoradPieces({ boardSize }: { boardSize: number }) {
         />
       ))}
       {state.selectedPiece != null &&
-      state.getTurn() == 'goat' &&
+      isTurn(state, 'goat') &&
       !state.goats.includes(state.selectedPiece) ? (
         <GoatPiece
           boardSize={boardSize}

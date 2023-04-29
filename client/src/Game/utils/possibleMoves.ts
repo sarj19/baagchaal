@@ -1,9 +1,7 @@
 import { GameState, Move, Position } from '../../common/types';
-import { adjancentPositions } from './adjancentPositions';
 import { canTigerEatGoat } from './canTigerEatGoat';
-import { getAllEmptySpaces } from './getAllEmptySpaces';
-import { isAllGoatsPlayed } from './goatsPlayed';
-import { isEmptySpace } from './isEmptySpace';
+import { isAllGoatsPlayed } from './goats';
+import { adjancentPositions, getAllEmptySpaces, isEmptySpace } from './validPositions';
 
 export function getPossibleMovesForTigers({
   tigers,

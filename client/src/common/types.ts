@@ -47,7 +47,6 @@ export interface GameState {
   tigers: Position[];
   moves: Array<Move>;
   selectedPiece: Position | null;
-  getTurn: () => PieceType;
   message: string | null;
 }
 

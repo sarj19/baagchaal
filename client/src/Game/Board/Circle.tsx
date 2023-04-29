@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
-import useCanvasRef from "../utils/useCanvasRef";
-import Point from "../../common/Point";
+import React, { useEffect } from 'react';
+
+import Point from '../../common/Point';
+import useCanvasRef from '../utils/useCanvasRef';
 
 const length = 2 * Math.PI;
 

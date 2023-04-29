@@ -1,8 +1,8 @@
 import { GameContext, GameState, Position } from '../../common/types';
-import { adjancentPositions } from './adjancentPositions';
 import { canTigerEatGoat } from './canTigerEatGoat';
-import { ARR_0_TO_24 } from './consts';
-import { isAllGoatsPlayed } from './goatsPlayed';
+import { isAllGoatsPlayed } from './goats';
+import { isTurn } from './turn';
+import { adjancentPositions, ARR_0_TO_24 } from './validPositions';
 
 export default function getHintHighlightPositions(
   state: GameState,
@@ -10,8 +10,8 @@ export default function getHintHighlightPositions(
 ): [Set<Position>, Position[]] {
   const highlight = new Set<Position>();
   let possibleNewPosForGoats: Position[] = [];
-  if (hint === true && state.getTurn() === designation) {
-    if (state.getTurn() === "goat") {
+  if (hint === true && isTurn(state, designation)) {
+    if (isTurn(state, 'goat')) {
       if (isAllGoatsPlayed(state)) {
         state.goats.forEach((goat) => {
           adjancentPositions[goat].forEach((adjPos) => {
@@ -30,7 +30,7 @@ export default function getHintHighlightPositions(
           (pos) => !state.goats.includes(pos) && !state.tigers.includes(pos)
         );
       }
-    } else if (state.getTurn() === "tiger") {
+    } else if (isTurn(state, 'tiger')) {
       state.tigers.forEach((tiger) => {
         adjancentPositions[tiger].forEach((adjPos) => {
           if (state.goats.includes(adjPos)) {

@@ -6,7 +6,7 @@ import React from 'react';
 import Goat from '../../common/Goat';
 import { MAX_GOATS } from '../../common/types';
 import useGameState, { GameStateContextReducer } from '../reducers/useGameState';
-import { getNumberOfGoatsPlayed } from '../utils/goatsPlayed';
+import { getNumberOfGoatsPlayed } from '../utils/goats';
 
 export default function GoatCounter() {
   const [state, _]: GameStateContextReducer = useGameState();

@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 
 import useGameContext from '../../reducers/useGameContext';
 import useGameState from '../reducers/useGameState';
-import { getWinner } from '../utils/getWinner';
+import { getWinner } from '../utils/winner';
 import MessageBanner from './MessageBanner';
 import Turn from './Turn';
 import WaitingForOtherPlayer from './WaitingForOtherPlayer';

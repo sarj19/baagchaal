@@ -1,5 +1,5 @@
 import { Position } from '../../common/types';
-import { isValidPositionToMove } from './isValidPositionToMove';
+import { isValidPositionToMove } from './validPositions';
 
 // return project tiger position
 export function canTigerEatGoat(

@@ -6,7 +6,7 @@ import useGameContext from '../reducers/useGameContext';
 import Board from './Board/Board';
 import useGameState from './reducers/useGameState';
 import { getRandomMove, getScoredMove } from './utils/moveSelector';
-import { getPossibleMovesForGoats, getPossibleMovesForTigers } from './utils/possibleMoves';
+import { getTurn } from './utils/turn';
 
 export default function Game({
   boardSize,
@@ -16,7 +16,7 @@ export default function Game({
   const [state, stateDispatch] = useGameState();
   const [{ userId, gameHash, gameType, designation, winner }, contextDispatch] =
     useGameContext();
-  const prevTurn = useRef(state.getTurn());
+  const prevTurn = useRef(getTurn(state));
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function Game({
           // TODO verify opponent's userId after storing it for first time
           // use opponent id instead of players count
           if (data.gameHash == gameHash) {
-            prevTurn.current = state.getTurn() == 'goat' ? 'tiger' : 'goat';
+            prevTurn.current = getTurn(state) == 'goat' ? 'tiger' : 'goat';
             stateDispatch({ type: 'server', value: data.moves });
           }
         })
@@ -53,8 +53,8 @@ export default function Game({
 
   useEffect(() => {
     if (gameType == 'p2p_internet') {
-      if (prevTurn.current == state.getTurn()) return;
-      prevTurn.current = state.getTurn();
+      if (prevTurn.current == getTurn(state)) return;
+      prevTurn.current = getTurn(state);
 
       try {
         socketRef!.current!.emit('movepiece', {
@@ -70,41 +70,29 @@ export default function Game({
         if (selectedMove != null) {
           const [from, to] = selectedMove;
           // give user feel by waiting
+          stateDispatch({ type: 'select', value: from });
           setTimeout(() => {
-            stateDispatch({ type: 'select', value: from });
-            setTimeout(() => {
-              stateDispatch({ type: 'select', value: to });
-            }, 1000);
+            stateDispatch({ type: 'select', value: to });
           }, 1000);
         }
       };
 
       // user's turn so let them play
-      if (state.getTurn() == designation) return;
-
-      let possibleMoves: Move[];
-      if (designation == 'goat' /* bot is tiger */) {
-        possibleMoves = getPossibleMovesForTigers(state);
-      } /* bot is goat */ else {
-        possibleMoves = getPossibleMovesForGoats(state);
-      }
+      if (getTurn(state) == designation || designation == null || state == null)
+        return;
 
       if (gameType == 'bot_random') {
-        movePiece(getRandomMove(possibleMoves));
+        movePiece(getRandomMove(state));
       } else if (gameType == 'bot_scored') {
-        movePiece(
-          getScoredMove(
-            state,
-            possibleMoves,
-            designation == 'goat' ? 'tiger' : 'goat'
-          )
-        );
+        getScoredMove(state, (scoredMove) => {
+          movePiece(scoredMove);
+        });
       }
     } else if (gameType == 'self') {
       // update the designation after each turn as you are playing with yourself
       contextDispatch({
         type: 'designate',
-        value: state.getTurn(),
+        value: getTurn(state),
       });
     }
   }, [state.moves, gameType]);

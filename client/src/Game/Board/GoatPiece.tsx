@@ -9,7 +9,7 @@ type Props = {
   boardSize: number;
   position: number;
   selected: boolean;
-  type: "highlight" | "gray" | "default";
+  type: 'highlight' | 'gray' | 'default';
   onClick: () => void;
 };
 export default function GoatPiece({
@@ -43,9 +43,9 @@ export default function GoatPiece({
     />
   );
 
-  if (type === "highlight") {
+  if (type === 'highlight') {
     return <Highlight element={element} />;
-  } else if (type === "gray") {
+  } else if (type === 'gray') {
     return <Ghosted element={element} />;
   }
 

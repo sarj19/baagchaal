@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { Position } from '../common/types';
 import useGameContext from '../reducers/useGameContext';
 import useGameState from './reducers/useGameState';
+import { getTurn } from './utils/turn';
 
 export default function Debug() {
   const context = useGameContext()[0];
@@ -11,7 +12,7 @@ export default function Debug() {
   const prevContext = useRef(context);
 
   useEffect(() => {
-    console.debug('=======DEBUG=======', 'turn', state.getTurn());
+    console.debug('=======DEBUG=======', 'turn', getTurn(state));
     if (prevContext.current != context) {
       for (let prop in context) {
         // @ts-ignore

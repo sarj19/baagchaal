@@ -1,34 +1,36 @@
 import React, { ReactNode, useMemo } from 'react';
 
 import { Position } from '../../common/types';
+import { gameStateReducer } from '../reducers/gameStateReducer';
 import useGameState from '../reducers/useGameState';
-import { ARR_0_TO_24 } from '../utils/consts';
+import { getScore } from '../utils/bestBotMove';
 import getDimension from '../utils/getDimension';
-import { isAllGoatsPlayed } from '../utils/goatsPlayed';
-import { isEmptySpace } from '../utils/isEmptySpace';
-import {
-    getGoatFavoredScore, getGoatFavoredScores, getTigerFavoredScores
-} from '../utils/moveSelector';
-import { getPossibleMovesForTiger } from '../utils/possibleMoves';
+import { isAllGoatsPlayed } from '../utils/goats';
+import { getPossibleMovesForGoat, getPossibleMovesForTiger } from '../utils/possibleMoves';
+import { isTurn } from '../utils/turn';
+import { ARR_0_TO_24, isEmptySpace } from '../utils/validPositions';
 
 export function DebugPieceOverlay({ boardSize }: { boardSize: number }) {
   const [state, _] = useGameState();
 
-  if (state.getTurn() == 'goat' && isAllGoatsPlayed(state)) {
+  if (isTurn(state, 'goat') && isAllGoatsPlayed(state)) {
     return (
       <>
         {state.goats.map((position) => {
-          const possibleMoves = getPossibleMovesForTiger(
-            position,
-            state.tigers,
-            state.goats
-          );
-          const scores = getGoatFavoredScores(state, possibleMoves);
+          const possibleMoves = getPossibleMovesForGoat(position, state);
+          const scores = possibleMoves.map(([from, to]) => {
+            const newState = gameStateReducer(state, {
+              type: 'move_directly',
+              from,
+              to,
+            });
+            return getScore(newState);
+          });
           return (
             <DebugInfo boardSize={boardSize} position={position} key={position}>
               {possibleMoves.map((v, i) => (
                 <>
-                  {v[1]} -&gt; {scores[i]}
+                  {v[1]} -&gt; {-scores[i]}
                   <br />
                 </>
               ))}
@@ -37,16 +39,22 @@ export function DebugPieceOverlay({ boardSize }: { boardSize: number }) {
         })}
       </>
     );
-  } else if (state.getTurn() == 'goat' /* need to place goats*/) {
+  } else if (isTurn(state, 'goat') /* need to place goats*/) {
     return (
       <>
         {ARR_0_TO_24.filter((position) =>
           isEmptySpace(position, state.goats, state.tigers)
         ).map((position) => {
+          const newState = gameStateReducer(state, {
+            type: 'move_directly',
+            from: position,
+            to: position,
+          });
+          const score = getScore(newState);
+
           return (
             <DebugInfo boardSize={boardSize} position={position} key={position}>
-              {getGoatFavoredScore(state, [position, position])}
-              <br />
+              {-score}
             </DebugInfo>
           );
         })}
@@ -61,7 +69,15 @@ export function DebugPieceOverlay({ boardSize }: { boardSize: number }) {
             state.tigers,
             state.goats
           );
-          const scores = getTigerFavoredScores(state, possibleMoves);
+          const scores = possibleMoves.map(([from, to]) => {
+            const newState = gameStateReducer(state, {
+              type: 'move_directly',
+              from,
+              to,
+            });
+            return getScore(newState);
+          });
+
           return (
             <DebugInfo boardSize={boardSize} position={position} key={position}>
               {possibleMoves.map((v, i) => (

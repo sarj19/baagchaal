@@ -8,6 +8,7 @@ import Highlight from '../../common/Highlight';
 import Tiger from '../../common/Tiger';
 import useGameContext from '../../reducers/useGameContext';
 import useGameState from '../reducers/useGameState';
+import { isTurn } from '../utils/turn';
 
 const IMG_SIZE = 60;
 
@@ -19,7 +20,7 @@ export default function Turn() {
     designation === 'tiger' && gameType !== 'self' ? 'You' : 'Tiger';
   const goat = designation === 'goat' && gameType !== 'self' ? 'You' : 'Goat';
 
-  if (state.getTurn() === 'tiger') {
+  if (isTurn(state, 'tiger')) {
     return (
       <>
         <div className="hasturn">

@@ -1,17 +1,14 @@
-import { GameState, GameStateActions, PieceType, Position } from '../../common/types';
+import { GameState, GameStateActions, Position } from '../../common/types';
 import { canTigerEatGoat } from '../utils/canTigerEatGoat';
-import { isAllGoatsPlayed } from '../utils/goatsPlayed';
-import { isEmptySpace } from '../utils/isEmptySpace';
-import { isValidPositionToMove } from '../utils/isValidPositionToMove';
+import { isAllGoatsPlayed } from '../utils/goats';
+import { isTurn } from '../utils/turn';
+import { isEmptySpace, isValidPositionToMove } from '../utils/validPositions';
 
 export const initialState: GameState = {
   selectedPiece: null,
   moves: [],
   tigers: [0, 4, 20, 24],
   goats: [],
-  getTurn(): PieceType {
-    return this.moves.length % 2 === 0 ? 'goat' : 'tiger';
-  },
   message: null,
 };
 
@@ -39,10 +36,9 @@ export function gameStateReducer(
       if (state.selectedPiece === null) {
         return maybeSelectPiece(state, action.value);
       } else if (action.value !== null) {
-        const newState =
-          state.getTurn() === 'goat'
-            ? maybeMoveGoat(state, state.selectedPiece, action.value)
-            : maybeMoveTiger(state, state.selectedPiece, action.value);
+        const newState = isTurn(state, 'goat')
+          ? maybeMoveGoat(state, state.selectedPiece, action.value)
+          : maybeMoveTiger(state, state.selectedPiece, action.value);
 
         if (newState != state) {
           return newState;
@@ -52,7 +48,7 @@ export function gameStateReducer(
       return state;
     }
     case 'move_directly': {
-      return state.getTurn() === 'goat'
+      return isTurn(state, 'goat')
         ? maybeMoveGoat(state, action.from, action.to)
         : maybeMoveTiger(state, action.from, action.to);
     }
@@ -75,10 +71,9 @@ export function gameStateReducer(
 
       for (let i = newState.moves.length; i < action.value.length; i++) {
         const [from, to] = action.value[i];
-        newState =
-          newState.getTurn() === 'goat'
-            ? maybeMoveGoat(newState, from, to)
-            : maybeMoveTiger(newState, from, to);
+        newState = isTurn(newState, 'goat')
+          ? maybeMoveGoat(newState, from, to)
+          : maybeMoveTiger(newState, from, to);
 
         // if move was not valid, help break out of the loop
         if (newState.moves.length !== i + 1) {
@@ -93,7 +88,7 @@ export function gameStateReducer(
 }
 
 function maybeSelectPiece(state: GameState, value: Position | null): GameState {
-  return state.getTurn() === 'goat'
+  return isTurn(state, 'goat')
     ? maybeSelectGoat(state, value)
     : maybeSelectTiger(state, value);
 }

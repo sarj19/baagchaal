@@ -3,6 +3,7 @@ import React, { ReactElement, useEffect, useRef } from 'react';
 import useGameContext from '../../reducers/useGameContext';
 import useGameState from '../reducers/useGameState';
 import getNearestBoardPosition from '../utils/getNearestBoardPosition';
+import { isTurn } from '../utils/turn';
 import { CanvasContext, CanvasContextType } from '../utils/useCanvasRef';
 import BoardGrid from './BoardGrid';
 
@@ -25,7 +26,7 @@ export default function BoardDecor({ width, height }: Props): ReactElement {
 
     const listener = (e: MouseEvent) => {
       if (winner != null) return;
-      if (state.getTurn() != designation) {
+      if (!isTurn(state, designation)) {
         stateDispatch({ type: 'selected_without_turn' });
       } else {
         const boardPosition = getNearestBoardPosition(e, canvas);

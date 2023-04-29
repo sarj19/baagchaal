@@ -1,5 +1,38 @@
 import { Position } from '../../common/types';
 
+// @ts-ignore
+export const ARR_0_TO_24: Position[] = Array.from(Array(25).keys());
+
+export function isValidPositionToMove(from: number, to: number): boolean {
+  if (
+    from > 24 ||
+    to > 24 ||
+    from < 0 ||
+    to < 0 ||
+    parseInt(`${from}`, 10) !== from ||
+    parseInt(`${to}`, 10) !== to
+  ) {
+    return false;
+  }
+  // @ts-ignore
+  return adjancentPositions[from].has(to);
+}
+
+export function isEmptySpace(
+  pos: Position,
+  goats: Position[],
+  tigers: Position[]
+): boolean {
+  return !(goats.includes(pos) || tigers.includes(pos));
+}
+
+export function getAllEmptySpaces(
+  tigers: Position[],
+  goats: Position[]
+): Position[] {
+  return ARR_0_TO_24.filter((p) => isEmptySpace(p, goats, tigers));
+}
+
 /**
  *  0   1   2   3   4
  *  5   6   7   8   9
