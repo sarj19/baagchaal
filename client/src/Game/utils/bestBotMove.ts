@@ -6,6 +6,9 @@ import {
 } from './possibleMoves';
 import { getTurn } from './turn';
 
+const GOAT_WIN_SCORE = -20;
+const TIGER_WIN_SCORE = 20;
+
 // eslint-disable-next-line no-restricted-globals
 self.onmessage = (
   ev: MessageEvent<{
@@ -55,36 +58,56 @@ self.onmessage = (
   self.postMessage(possibleMove);
 };
 
-export function getScore(state: GameState, depth: number = 3): number {
+export function getScore(
+  state: GameState,
+  depth: number = 3,
+  tigerRunningScore: number = GOAT_WIN_SCORE,
+  goatRunningScore: number = TIGER_WIN_SCORE
+): number {
   const turn = getTurn(state);
   const score = calcScoreForTiger(state);
-  if (depth == 0 || score == 20 || score == -20) {
+  if (depth == 0 || score == GOAT_WIN_SCORE || score == TIGER_WIN_SCORE) {
     return score;
   }
 
   if (/* goal is -20 */ turn == 'goat') {
-    let value = 20;
+    let value = TIGER_WIN_SCORE;
     const possibleMoves = getPossibleMovesForGoats(state);
-    possibleMoves.forEach(([from, to]) => {
+    for (const i in possibleMoves) {
       const newState = gameStateReducer(state, {
         type: 'move_directly',
-        from,
-        to,
+        from: possibleMoves[i][0],
+        to: possibleMoves[i][1],
       });
-      value = Math.min(value, getScore(newState, depth - 1));
-    });
+      value = Math.min(
+        value,
+        getScore(newState, depth - 1, tigerRunningScore, goatRunningScore)
+      );
+      if (value < tigerRunningScore) {
+        break;
+      }
+      goatRunningScore = Math.min(goatRunningScore, value);
+    }
     return value;
   } /* turn is tiger, goal is +20 */ else {
-    let value = -20;
+    let value = GOAT_WIN_SCORE;
     const possibleMoves = getPossibleMovesForTigers(state);
-    possibleMoves.forEach(([from, to]) => {
+
+    for (const i in possibleMoves) {
       const newState = gameStateReducer(state, {
         type: 'move_directly',
-        from,
-        to,
+        from: possibleMoves[i][0],
+        to: possibleMoves[i][1],
       });
-      value = Math.max(value, getScore(newState, depth - 1));
-    });
+      value = Math.max(
+        value,
+        getScore(newState, depth - 1, tigerRunningScore, goatRunningScore)
+      );
+      if (value > goatRunningScore) {
+        break;
+      }
+      tigerRunningScore = Math.max(tigerRunningScore, value);
+    }
     return value;
   }
 }
