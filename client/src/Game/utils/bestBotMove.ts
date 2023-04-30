@@ -14,10 +14,15 @@ self.onmessage = (
   ev: MessageEvent<{
     type: 'best_bot_move';
     state: GameState;
+    level: number;
   }>
 ) => {
   if (ev.data?.type != 'best_bot_move') return;
-  const { state } = ev.data;
+  const { state, level } = ev.data;
+  if (level == null) {
+    console.error('bot smartness level missing');
+    return;
+  }
   const turn = getTurn(state);
 
   let possibleMoves: Move[];
@@ -39,7 +44,7 @@ self.onmessage = (
       from,
       to,
     });
-    return getScore(newState);
+    return getScore(newState, level);
   });
 
   let bestScore = scores[0];
@@ -60,7 +65,7 @@ self.onmessage = (
 
 export function getScore(
   state: GameState,
-  depth: number = 3,
+  depth: number,
   tigerRunningScore: number = GOAT_WIN_SCORE,
   goatRunningScore: number = TIGER_WIN_SCORE
 ): number {

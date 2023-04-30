@@ -1,11 +1,11 @@
 import React, { ReactElement, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 
-import { Move, ServerData } from '../common/types';
+import { ServerData } from '../common/types';
 import useGameContext from '../reducers/useGameContext';
 import Board from './Board/Board';
 import useGameState from './reducers/useGameState';
-import { getRandomMove, getScoredMove } from './utils/moveSelector';
+import { getScoredMove } from './utils/moveSelector';
 import { getTurn } from './utils/turn';
 
 export default function Game({
@@ -14,8 +14,10 @@ export default function Game({
   boardSize: number;
 }): ReactElement {
   const [state, stateDispatch] = useGameState();
-  const [{ userId, gameHash, gameType, designation, winner }, contextDispatch] =
-    useGameContext();
+  const [
+    { userId, gameHash, gameType, designation, winner, botLevel },
+    contextDispatch,
+  ] = useGameContext();
   const prevTurn = useRef(getTurn(state));
   const socketRef = useRef<Socket | null>(null);
 
@@ -65,8 +67,18 @@ export default function Game({
       } catch (err) {
         // TODO user server disconnected error message
       }
-    } else if (gameType?.startsWith('bot_') && winner == null) {
-      const movePiece = (selectedMove: Move | null) => {
+    } else if (gameType == 'bot' && winner == null) {
+      // user's turn so let them play
+      if (
+        getTurn(state) == designation ||
+        designation == null ||
+        state == null
+      ) {
+        return;
+      }
+
+      stateDispatch({ type: 'bot_thinking' });
+      getScoredMove(state, botLevel ? botLevel : 2, (selectedMove) => {
         if (selectedMove != null) {
           const [from, to] = selectedMove;
           // give user feel by waiting
@@ -75,19 +87,7 @@ export default function Game({
             stateDispatch({ type: 'select', value: to });
           }, 1000);
         }
-      };
-
-      // user's turn so let them play
-      if (getTurn(state) == designation || designation == null || state == null)
-        return;
-
-      if (gameType == 'bot_random') {
-        movePiece(getRandomMove(state));
-      } else if (gameType == 'bot_scored') {
-        getScoredMove(state, (scoredMove) => {
-          movePiece(scoredMove);
-        });
-      }
+      });
     } else if (gameType == 'self') {
       // update the designation after each turn as you are playing with yourself
       contextDispatch({

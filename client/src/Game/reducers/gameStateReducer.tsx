@@ -23,6 +23,12 @@ export function gameStateReducer(
         message: 'Waiting on other player to move',
       };
     }
+    case 'bot_thinking': {
+      return {
+        ...state,
+        message: 'Thinking next move...',
+      };
+    }
     case 'gameover': {
       return {
         ...state,

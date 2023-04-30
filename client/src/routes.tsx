@@ -21,21 +21,20 @@ export const router = createBrowserRouter(
       element: <Home to="new" />,
     },
     {
+      path: '/level',
+      element: <Home to="level" />,
+    },
+    {
+      path: '/designate',
+      element: <Home to="designate" />,
+    },
+    {
       path: '/game/self',
       element: <GameContainer />,
-      loader: (): ResumeGameData => {
-        return { gameType: 'self', designation: 'goat' };
-      },
     },
     {
       path: '/game/bot',
       element: <GameContainer />,
-      loader: (): ResumeGameData => {
-        return {
-          gameType: 'bot_scored', // "bot_random",
-          designation: Math.random() <= 0.5 ? 'goat' : 'tiger',
-        };
-      },
     },
     {
       path: '/game/:gameHash',

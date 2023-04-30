@@ -8,10 +8,7 @@ export type UserId = string;
 
 export type Move = [Position /* from */, Position /* to */];
 
-export type GameType = 'self' | 'bot_random' | 'bot_scored' | 'p2p_internet';
-//| "bot_ai"
-//| "p2p_localnetwork"
-//| "p2p_bt"
+export type GameType = 'self' | 'bot' | 'p2p_internet';
 
 export type GameContext = {
   gameType?: GameType;
@@ -20,6 +17,7 @@ export type GameContext = {
   opponentId?: UserId;
   designation?: PieceType;
   winner?: PieceType;
+  botLevel?: number;
   hint: boolean;
   debug: boolean;
 };
@@ -40,6 +38,7 @@ export type GameContextActions =
       userId?: UserId;
       gameHash?: GameHash;
       opponentId?: UserId;
+      botLevel?: number;
     };
 
 export interface GameState {
@@ -71,6 +70,7 @@ export type ResumeGameData =
 
 export type GameStateActions =
   | { type: 'selected_without_turn'; value?: null }
+  | { type: 'bot_thinking'; value?: null }
   | { type: 'gameover'; value: PieceType }
   | { type: 'select'; value: Position | null }
   | { type: 'move_directly'; from: Position; to: Position }

@@ -1,6 +1,7 @@
 import React, { ReactNode, useMemo } from 'react';
 
 import { Position } from '../../common/types';
+import useGameContext from '../../reducers/useGameContext';
 import { gameStateReducer } from '../reducers/gameStateReducer';
 import useGameState from '../reducers/useGameState';
 import { getScore } from '../utils/bestBotMove';
@@ -12,6 +13,8 @@ import { ARR_0_TO_24, isEmptySpace } from '../utils/validPositions';
 
 export function DebugPieceOverlay({ boardSize }: { boardSize: number }) {
   const [state, _] = useGameState();
+  const [context, __] = useGameContext();
+  const botLevel = context.botLevel ? context.botLevel : 2;
 
   if (isTurn(state, 'goat') && isAllGoatsPlayed(state)) {
     return (
@@ -24,7 +27,7 @@ export function DebugPieceOverlay({ boardSize }: { boardSize: number }) {
               from,
               to,
             });
-            return getScore(newState);
+            return getScore(newState, botLevel);
           });
           return (
             <DebugInfo boardSize={boardSize} position={position} key={position}>
@@ -50,7 +53,7 @@ export function DebugPieceOverlay({ boardSize }: { boardSize: number }) {
             from: position,
             to: position,
           });
-          const score = getScore(newState);
+          const score = getScore(newState, botLevel);
 
           return (
             <DebugInfo boardSize={boardSize} position={position} key={position}>
@@ -75,7 +78,7 @@ export function DebugPieceOverlay({ boardSize }: { boardSize: number }) {
               from,
               to,
             });
-            return getScore(newState);
+            return getScore(newState, botLevel);
           });
 
           return (

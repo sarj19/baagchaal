@@ -1,5 +1,5 @@
 import { Dispatch, useEffect } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useLocation, useNavigate } from 'react-router-dom';
 
 import { GameStateActions } from '../../common/types';
 import useGameContext from '../../reducers/useGameContext';
@@ -10,13 +10,16 @@ export default function useInitializeStates(
   // @ts-ignore
   const loaderData: ResumeGameData = useLoaderData();
   const [_, dispatch] = useGameContext();
+  const { state } = useLocation();
 
+  const navigate = useNavigate();
   useEffect(() => {
-    if (loaderData == null) {
+    if (loaderData == null && state == null) {
+      navigate('/');
       return;
     }
 
-    switch (loaderData.gameType) {
+    switch (loaderData?.gameType || state?.gameType) {
       case 'p2p_internet': {
         dispatch({
           type: 'new_game',
@@ -25,12 +28,17 @@ export default function useInitializeStates(
         stateDispatch({ type: 'server', value: loaderData.moves });
         return;
       }
-      case 'bot_random':
-      case 'bot_scored':
+      case 'bot': {
+        dispatch({
+          type: 'new_game',
+          ...state,
+        });
+        return;
+      }
       case 'self': {
         dispatch({
           type: 'new_game',
-          ...loaderData,
+          ...state,
         });
         return;
       }
@@ -38,5 +46,5 @@ export default function useInitializeStates(
         console.error('not implemented!');
       }
     }
-  }, [loaderData]);
+  }, [loaderData, state]);
 }

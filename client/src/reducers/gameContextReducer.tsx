@@ -42,6 +42,7 @@ export function gameContextReducer(
         designation: action.designation,
         userId: action.userId,
         opponentId: action.opponentId,
+        botLevel: action.botLevel,
       };
     }
   }

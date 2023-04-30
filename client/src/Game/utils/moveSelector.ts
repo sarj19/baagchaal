@@ -2,7 +2,7 @@ import { GameState, Move } from '../../common/types';
 import { getPossibleMovesForGoats, getPossibleMovesForTigers } from './possibleMoves';
 import { getTurn } from './turn';
 
-export function getRandomMove(state: GameState): Move | null {
+function getRandomMove(state: GameState): Move | null {
   const turn = getTurn(state);
   let possibleMoves: Move[];
   if (turn == 'tiger') {
@@ -19,8 +19,13 @@ export function getRandomMove(state: GameState): Move | null {
 
 export function getScoredMove(
   state: GameState,
+  level: number,
   onMove: (scoredMove: Move | null) => void
 ) {
+  if (level == 0) {
+    onMove(getRandomMove(state));
+    return;
+  }
   const worker = new Worker(new URL('./bestBotMove.ts', import.meta.url));
   worker.onmessage = (ev) => {
     onMove(ev.data);
@@ -29,5 +34,6 @@ export function getScoredMove(
   worker.postMessage({
     type: 'best_bot_move',
     state,
+    level,
   });
 }
