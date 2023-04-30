@@ -3,6 +3,7 @@ import { GameContext, GameContextActions } from '../common/types';
 export const initialState: GameContext = {
   hint: false,
   debug: false,
+  showLeaveGame: false,
 };
 
 export function gameContextReducer(
@@ -17,6 +18,12 @@ export function gameContextReducer(
         return { ...state, designation: action.value };
       }
       return state;
+    }
+    case 'leave_game': {
+      if (action.value == state.showLeaveGame) {
+        return state;
+      }
+      return { ...state, showLeaveGame: action.value };
     }
     case 'set_winner': {
       if (action.value != null) {
@@ -36,12 +43,18 @@ export function gameContextReducer(
     }
     case 'new_game': {
       return {
-        ...state,
+        // reset automatically
+        hint: state.hint,
+        debug: state.debug,
+        winner: undefined,
+        showLeaveGame: false,
+
+        // get as a new game values
         gameType: action.gameType,
         gameHash: action.gameHash,
-        designation: action.designation,
         userId: action.userId,
         opponentId: action.opponentId,
+        designation: action.designation,
         botLevel: action.botLevel,
       };
     }

@@ -32,6 +32,7 @@
 
 .boardContainer {
   margin: 0 auto;
+  display: grid;
 }
 
 .boardContainer > canvas,

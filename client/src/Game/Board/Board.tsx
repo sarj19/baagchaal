@@ -4,6 +4,7 @@ import React, { ReactElement } from 'react';
 
 import useGameContext from '../../reducers/useGameContext';
 import BoardDecor from './BoardDecor';
+import { BoardOverlay } from './BoardOverlay';
 import BoradPieces from './BoradPieces';
 import { DebugPieceOverlay } from './DebugPieceOverlay';
 
@@ -21,6 +22,7 @@ export default function Board({
       <BoardDecor width={boardSize} height={boardSize} />
       <BoradPieces boardSize={boardSize} />
       {debug && <DebugPieceOverlay boardSize={boardSize} />}
+      <BoardOverlay />
     </div>
   );
 }

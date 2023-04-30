@@ -4,7 +4,7 @@ import React from 'react';
 
 import GoatCounter from './GoatCounter';
 import Hint from './Hint';
-import LeaveGame from './LeaveGame';
+import LeaveGameButton from './LeaveGameButton';
 import Options from './Options';
 import Rules from './Rules';
 
@@ -22,7 +22,7 @@ export default function GameInfoAndButtons({ fixed }: { fixed: boolean }) {
       <Hint />
       <Rules />
       <Options />
-      <LeaveGame />
+      <LeaveGameButton />
     </div>
   );
 }

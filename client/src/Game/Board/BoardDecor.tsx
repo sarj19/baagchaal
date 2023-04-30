@@ -4,47 +4,33 @@ import useGameContext from '../../reducers/useGameContext';
 import useGameState from '../reducers/useGameState';
 import getNearestBoardPosition from '../utils/getNearestBoardPosition';
 import { isTurn } from '../utils/turn';
-import { CanvasContext, CanvasContextType } from '../utils/useCanvasRef';
-import BoardGrid from './BoardGrid';
+import board from './board.png';
 
 type Props = { width: number; height: number };
 
 export default function BoardDecor({ width, height }: Props): ReactElement {
-  const canvasRef: CanvasContextType = useRef(null);
+  const boardRef = useRef<HTMLImageElement | null>(null);
 
   const [state, stateDispatch] = useGameState();
   const [{ designation, winner }, _] = useGameContext();
 
-  const canvas = canvasRef.current;
-  if (canvas != null) {
-    const ctx = canvas.getContext('2d')!;
-    ctx.clearRect(0, 0, width, height);
-  }
-
   useEffect(() => {
-    const canvas = canvasRef!.current!;
-
+    const board = boardRef.current!;
     const listener = (e: MouseEvent) => {
       if (winner != null) return;
       if (!isTurn(state, designation)) {
         stateDispatch({ type: 'selected_without_turn' });
       } else {
-        const boardPosition = getNearestBoardPosition(e, canvas);
+        const boardPosition = getNearestBoardPosition(e, board);
         stateDispatch({ type: 'select', value: boardPosition });
       }
     };
-    canvas.addEventListener('click', listener);
+    board.addEventListener('click', listener);
 
     return () => {
-      canvas.removeEventListener('click', listener);
+      board.removeEventListener('click', listener);
     };
-  }, [canvasRef.current, state.moves, designation]);
+  }, [boardRef.current, state.moves, designation]);
 
-  return (
-    <canvas ref={canvasRef} height={height} width={width}>
-      <CanvasContext.Provider value={canvasRef}>
-        <BoardGrid />
-      </CanvasContext.Provider>
-    </canvas>
-  );
+  return <img ref={boardRef} src={board} height={height} width={width} />;
 }

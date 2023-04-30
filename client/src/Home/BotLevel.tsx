@@ -1,3 +1,5 @@
+import '../styles/Home.css';
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -8,7 +10,7 @@ export function BotLevel({ level }: { level: number }) {
       to={'/designate'}
       state={{ ...state, gameType: 'bot', botLevel: level }}
     >
-      <button className="homeButton pill">Level {level}</button>
+      <button className="levelButton pill">{level}</button>
     </Link>
   );
 }

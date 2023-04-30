@@ -9,12 +9,12 @@
   position: fixed;
   bottom: 0;
   width: 100%;
-  gap: 1px;
 }
 
-.gameInfoAndButtonsContainerFixed > * {
+.gameInfoAndButtonsContainerFixed > .pill {
   display: inline-flex;
-  margin: 2px 3px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
 .gameInfoAndButtonsContainerFixed > *:nth-child(2) {
   flex-grow: 1;

@@ -20,6 +20,7 @@ export type GameContext = {
   botLevel?: number;
   hint: boolean;
   debug: boolean;
+  showLeaveGame: boolean;
 };
 
 export type GameContextActions =
@@ -39,7 +40,8 @@ export type GameContextActions =
       gameHash?: GameHash;
       opponentId?: UserId;
       botLevel?: number;
-    };
+    }
+  | { type: 'leave_game'; value: boolean };
 
 export interface GameState {
   goats: Position[];

@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 
 const HIGHLIGHT_SIZE = 5;
 type Props = { element: ReactElement };
-export default function Highlight({ element }: Props) {
+export default function Ghosted({ element }: Props) {
   return React.cloneElement(element, {
     style: {
       ...element.props.style,

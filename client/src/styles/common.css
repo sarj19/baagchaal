@@ -7,33 +7,40 @@
   min-height: 50px;
 }
 
-button.pill {
-  box-shadow: 1px 2px 0px 2px red;
+button.pill,
+a.pill {
+  box-shadow: 0px -4px 0px 0px red;
 }
 
-button.pill.activePill {
-  box-shadow: 1px 2px 0px 2px green;
+button.pill.activePill,
+a.pill.activePill {
+  box-shadow: 0px -4px 0px 0px green;
 }
 
-button:disabled.pill {
+button:disabled.pill,
+a:disabled.pill {
   color: rgb(63, 62, 62);
   background-color: #997f1f;
 }
 
-button:hover:enabled.pill {
-  box-shadow: 4px 4px 0px 2px red;
+button:hover:enabled.pill,
+a:hover.pill {
+  box-shadow: 0px -8px 0px 0px red;
 }
 
-button:hover:enabled.pill.activePill {
-  box-shadow: 4px 4px 0px 2px green;
+button:hover:enabled.pill.activePill,
+a:hover.pill.activePill {
+  box-shadow: 0px -8px 0px 0px green;
 }
 
-button:hover:enabled:active.pill {
-  box-shadow: 4px 4px 0px 2px green;
+button:hover:enabled:active.pill,
+a:hover:active.pill {
+  box-shadow: 0px -4px 0px 0px green;
 }
 
-button:hover:enabled:active.pill.activePill {
-  box-shadow: 4px 4px 0px 2px red;
+button:hover:enabled:active.pill.activePill,
+a:hover:active.pill.activePill {
+  box-shadow: 0px -4px 0px 0px red;
 }
 
 /**
@@ -61,7 +68,7 @@ button:hover:enabled:active.pill.activePill {
 }
 .dot-pulse::before,
 .dot-pulse::after {
-  content: "";
+  content: '';
   display: inline-block;
   position: absolute;
   top: 0;

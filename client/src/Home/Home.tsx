@@ -56,6 +56,7 @@ export default function Home({ to }: Props) {
         <HomeTitle />
         <Designate designation="goat" />
         <Designate designation="tiger" />
+        <Designate designation="random" />
       </div>
     );
   }
@@ -64,12 +65,15 @@ export default function Home({ to }: Props) {
     return (
       <div className="container">
         <HomeTitle />
-        <BotLevel level={0} />
-        <BotLevel level={1} />
-        <BotLevel level={2} />
-        <BotLevel level={3} />
-        <BotLevel level={4} />
-        <BotLevel level={5} />
+        <div className="pill selectLevel">Select Level</div>
+        <div className="levels">
+          <BotLevel level={0} />
+          <BotLevel level={1} />
+          <BotLevel level={2} />
+          <BotLevel level={3} />
+          <BotLevel level={4} />
+          <BotLevel level={5} />
+        </div>
       </div>
     );
   }
