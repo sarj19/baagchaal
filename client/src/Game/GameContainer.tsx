@@ -32,7 +32,6 @@ export function GameContainer() {
 
   return (
     <div className="gameContainer">
-      <h1 className="title">BaagChaal</h1>
       <div className="content">
         <GameStateContext.Provider value={stateReducer}>
           <div>

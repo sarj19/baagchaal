@@ -5,17 +5,16 @@
 }
 
 .gameInfoAndButtonsContainerFixed {
-  display: inline-flex;
+  width: 100%;
   position: fixed;
   bottom: 0;
-  width: 100%;
+  display: flex;
 }
 
 .gameInfoAndButtonsContainerFixed > .pill {
-  display: inline-flex;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
-}
-.gameInfoAndButtonsContainerFixed > *:nth-child(2) {
-  flex-grow: 1;
+  border-top-right-radius: 0px;
+  border-top-left-radius: 0px;
+  flex: 1;
 }
