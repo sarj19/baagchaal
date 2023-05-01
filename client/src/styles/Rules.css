@@ -1,0 +1,41 @@
+.rulesContainer {
+  color: black;
+  padding: 15px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 80px;
+  justify-content: center;
+}
+
+.rulesContainer > div {
+  min-width: 340px;
+  max-width: 350px;
+}
+
+.rulesTitle {
+  line-height: 50px;
+}
+
+.rules {
+  color: white;
+}
+
+.footer {
+  position: fixed;
+  padding-left: 15px;
+  bottom: 15px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer > a {
+  width: 200px;
+  height: 50px;
+  line-height: 50px;
+}

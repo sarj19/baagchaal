@@ -10,6 +10,8 @@
 button.pill,
 a.pill {
   box-shadow: 0px -4px 0px 0px red;
+  text-decoration: none;
+  color: black;
 }
 
 button.pill.activePill,

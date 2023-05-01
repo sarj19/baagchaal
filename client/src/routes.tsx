@@ -5,12 +5,17 @@ import { createBrowserRouter, redirect } from 'react-router-dom';
 import { ResumeGameData } from './common/types';
 import { GameContainer } from './Game/GameContainer';
 import Home from './Home/Home';
+import Rules from './Rules/Rules';
 
 export const router = createBrowserRouter(
   [
     {
       path: '/',
       element: <Home to="home" />,
+    },
+    {
+      path: '/rules',
+      element: <Rules />,
     },
     {
       path: '/join',

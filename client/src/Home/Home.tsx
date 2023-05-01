@@ -1,8 +1,8 @@
 import '../styles/Home.css';
 
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
+import useEscapeToGoBack from '../common/useEscapeToGoBack';
 import { BotLevel } from './BotLevel';
 import Designate from './Designate';
 import { HomeTitle } from './HomeTitle';
@@ -15,20 +15,7 @@ import PlayWithYourselfButton from './PlayWithYourselfButton';
 
 type Props = { to: 'new' | 'join' | 'home' | 'level' | 'designate' };
 export default function Home({ to }: Props) {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const listener = (e: any) => {
-      if (e.key === 'Escape') {
-        navigate('/');
-      }
-    };
-    document.addEventListener('keydown', listener);
-
-    return () => {
-      document.removeEventListener('keydown', listener);
-    };
-  }, []);
+  useEscapeToGoBack();
 
   if (to === 'new') {
     return (

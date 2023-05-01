@@ -7,7 +7,7 @@ import Hint from './Hint';
 import LeaveGameButton from './LeaveGameButton';
 import Options from './Options';
 import Replay from './Replay';
-import Rules from './Rules';
+import RulesButton from './RulesButton';
 
 export default function GameInfoAndButtons({ fixed }: { fixed: boolean }) {
   return (
@@ -22,7 +22,7 @@ export default function GameInfoAndButtons({ fixed }: { fixed: boolean }) {
       >
         {!fixed && <GoatCounter />}
         <Hint fixed={fixed} />
-        <Rules fixed={fixed} />
+        <RulesButton fixed={fixed} />
         <Options fixed={fixed} />
         <Replay fixed={fixed} />
         <LeaveGameButton fixed={fixed} />
