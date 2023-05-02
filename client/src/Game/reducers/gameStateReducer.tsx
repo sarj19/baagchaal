@@ -39,9 +39,10 @@ export function gameStateReducer(
       };
     }
     case 'select': {
-      if (state.selectedPiece === null) {
-        return maybeSelectPiece(state, action.value);
-      } else if (action.value !== null) {
+      return maybeSelectPiece(state, action.value);
+    }
+    case 'move': {
+      if (state.selectedPiece !== null) {
         const newState = isTurn(state, 'goat')
           ? maybeMoveGoat(state, state.selectedPiece, action.value)
           : maybeMoveTiger(state, state.selectedPiece, action.value);
@@ -150,7 +151,7 @@ function maybeMoveTiger(
     return {
       ...state,
       selectedPiece: null,
-      moves: [...state.moves, [from, to]],
+      moves: [...state.moves, [from, actualTo]],
       tigers,
       goats,
       message: null,
@@ -175,12 +176,14 @@ function maybeMoveTiger(
   // tiger -> goat -> empty is same
   // its always 6 or 4 or 5 or 1
   const posDelta = (from! - to) / 2;
-  const goatPos = to + posDelta;
+  // @ts-ignore
+  const goatPos: Position = to + posDelta;
 
   if (
     // verify it is a valid path
     isValidPositionToMove(to, goatPos) === true &&
-    isValidPositionToMove(from!, goatPos) === true
+    isValidPositionToMove(from!, goatPos) === true &&
+    state.goats.includes(goatPos)
   ) {
     const goats = state.goats.filter((x) => x !== goatPos);
     const tigers = state.tigers.filter((x) => x !== from);

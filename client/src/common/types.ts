@@ -75,6 +75,7 @@ export type GameStateActions =
   | { type: 'bot_thinking'; value?: null }
   | { type: 'gameover'; value: PieceType }
   | { type: 'select'; value: Position | null }
+  | { type: 'move'; value: Position }
   | { type: 'move_directly'; from: Position; to: Position }
   | { type: 'server'; value: Move[] };
 

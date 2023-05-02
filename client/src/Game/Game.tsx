@@ -6,7 +6,7 @@ import useGameContext from '../reducers/useGameContext';
 import Board from './Board/Board';
 import useGameState from './reducers/useGameState';
 import { getScoredMove } from './utils/moveSelector';
-import { getTurn } from './utils/turn';
+import { gameOver, getTurn } from './utils/turn';
 
 export default function Game({
   boardSize,
@@ -14,10 +14,8 @@ export default function Game({
   boardSize: number;
 }): ReactElement {
   const [state, stateDispatch] = useGameState();
-  const [
-    { userId, gameHash, gameType, designation, winner, botLevel },
-    contextDispatch,
-  ] = useGameContext();
+  const [gameContext, contextDispatch] = useGameContext();
+  const { userId, gameHash, gameType, designation, botLevel } = gameContext;
   const prevTurn = useRef(getTurn(state));
   const socketRef = useRef<Socket | null>(null);
 
@@ -54,6 +52,7 @@ export default function Game({
   }, [gameType, gameHash]);
 
   useEffect(() => {
+    if (gameOver(gameContext)) return;
     if (gameType == 'p2p_internet') {
       if (prevTurn.current == getTurn(state)) return;
       prevTurn.current = getTurn(state);
@@ -67,7 +66,7 @@ export default function Game({
       } catch (err) {
         // TODO user server disconnected error message
       }
-    } else if (gameType == 'bot' && winner == null) {
+    } else if (gameType == 'bot') {
       // user's turn so let them play
       if (
         getTurn(state) == designation ||
@@ -84,7 +83,7 @@ export default function Game({
           // give user feel by waiting
           stateDispatch({ type: 'select', value: from });
           setTimeout(() => {
-            stateDispatch({ type: 'select', value: to });
+            stateDispatch({ type: 'move', value: to });
           }, 1000);
         }
       });

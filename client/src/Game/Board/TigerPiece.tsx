@@ -1,15 +1,18 @@
-import React, { ReactElement, useMemo } from 'react';
+import React, { EventHandler, ReactElement, UIEvent } from 'react';
 
 import Highlight from '../../common/Highlight';
 import Tiger from '../../common/Tiger';
-import getDimension from '../utils/getDimension';
+import { Position } from '../../common/types';
+import useGameContext from '../../reducers/useGameContext';
+import useGameState from '../reducers/useGameState';
+import { gameOver, isTurn } from '../utils/turn';
+import { useDraggablePiece } from './useDraggablePiece';
 
 type Props = {
   boardSize: number;
-  position: number;
+  position: Position;
   selected: boolean;
   highlight: boolean;
-  onClick: () => void;
 };
 
 export default function TigerPiece({
@@ -17,27 +20,49 @@ export default function TigerPiece({
   position,
   selected,
   highlight,
-  onClick,
 }: Props): ReactElement {
+  const [state, stateDispatch] = useGameState();
+  const gameContext = useGameContext()[0];
   const size = selected ? 90 : 70;
 
-  const j = Math.floor(position / 5);
-  const i = position - j * 5;
-
-  const { padding, spacing } = useMemo(
-    () => getDimension(boardSize),
-    [boardSize]
+  const [marginLeft, marginTop, setDragging] = useDraggablePiece(
+    size,
+    boardSize,
+    position
   );
+  const pieceClicked = () => {
+    if (gameOver(gameContext)) return;
+    if (isTurn(state, gameContext.designation)) {
+      if (state.selectedPiece == null || position == null) {
+        stateDispatch({ type: 'select', value: position });
+      } else {
+        stateDispatch({ type: 'move', value: position });
+      }
+    } else {
+      stateDispatch({ type: 'selected_without_turn' });
+    }
+  };
 
-  const x = padding + i * spacing;
-  const y = padding + j * spacing;
+  const pieceDragged: EventHandler<UIEvent> = (e) => {
+    e.preventDefault();
+    if (gameOver(gameContext)) return;
+
+    setDragging(true);
+    if (isTurn(state, gameContext.designation)) {
+      stateDispatch({ type: 'select', value: position });
+    } else {
+      stateDispatch({ type: 'selected_without_turn' });
+    }
+  };
 
   const element = (
     <Tiger
-      onClick={onClick}
+      onMouseDown={pieceDragged}
+      onTouchStart={pieceDragged}
+      onClick={pieceClicked}
       style={{
-        marginLeft: x - size / 2,
-        marginTop: y - size / 2,
+        marginLeft,
+        marginTop,
         width: size,
         height: size,
       }}

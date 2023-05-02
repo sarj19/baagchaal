@@ -4,13 +4,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import useGameContext from '../../reducers/useGameContext';
+import { gameOver } from '../utils/turn';
 
 export function GameOver() {
-  const { winner, designation, gameType } = useGameContext()[0];
+  const gameContext = useGameContext()[0];
 
-  if (winner == null) {
+  if (!gameOver(gameContext)) {
     return <></>;
   }
+
+  const { winner, designation, gameType } = gameContext;
 
   let displayText = `${winner} won`;
   if (gameType == 'self') {

@@ -2,16 +2,17 @@ import { Position } from '../../common/types';
 import getDimension from './getDimension';
 
 export default function getNearestBoardPosition(
-  e: MouseEvent,
+  clientX: number,
+  clientY: number,
   image: HTMLImageElement
 ): Position | null {
   const { padding, spacing } = getDimension(
     Math.min(image.width, image.height)
   );
-  const clickTolerance = spacing * 0.25 * (spacing * 0.25);
+  const clickTolerance = spacing * 0.48 * (spacing * 0.48);
 
-  const x = e.clientX - image.offsetLeft;
-  const y = e.clientY - image.offsetTop;
+  const x = clientX - image.offsetLeft;
+  const y = clientY - image.offsetTop;
 
   const i = Math.round((x - (x % spacing)) / spacing);
   const j = Math.round((y - (y % spacing)) / spacing);
