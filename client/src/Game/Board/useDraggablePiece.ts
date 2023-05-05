@@ -5,6 +5,7 @@ import { Position } from '../../common/types';
 import getDimension from '../utils/getDimension';
 
 export function useDraggablePiece(
+  element: React.RefObject<HTMLImageElement>,
   size: number,
   boardSize: number,
   position: Position
@@ -21,48 +22,68 @@ export function useDraggablePiece(
   );
 
   useEffect(() => {
+    const board = element.current?.parentElement;
+    if (board == null) return;
     if (!dragging) return;
+
     const onDragEnd = (e: UIEvent) => {
       setDragging(false);
       e.preventDefault();
     };
-    const onDrag = (e: MouseEvent | DragEvent | TouchEvent) => {
+
+    const onDrag = (e: MouseEvent | DragEvent) => {
       if (dragging) {
-        if (e instanceof TouchEvent) {
-          const _e = e.touches.item(0);
-          if (_e != null) {
-            setMousePos(new Point(_e.clientX, _e.clientY));
-          }
-        } else {
-          setMousePos(new Point(e.x, e.y));
+        e.preventDefault();
+        setMousePos(new Point(e.x, e.y));
+      }
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (dragging) {
+        e.preventDefault();
+        const _e = e.touches.item(0);
+        if (_e != null) {
+          setMousePos(new Point(_e.clientX, _e.clientY));
         }
       }
     };
 
-    document.addEventListener('mouseup', onDragEnd);
-    document.addEventListener('dragend', onDragEnd);
-    document.addEventListener('touchend', onDragEnd);
+    board.addEventListener('mouseup', onDragEnd);
+    board.addEventListener('dragend', onDragEnd);
+    board.addEventListener('touchend', onDragEnd);
 
-    document.addEventListener('drag', onDrag);
-    document.addEventListener('mousemove', onDrag);
-    document.addEventListener('touchmove', onDrag);
+    board.addEventListener('drag', onDrag);
+    board.addEventListener('mousemove', onDrag);
+    board.addEventListener('touchmove', onTouchMove, { passive: false });
 
     return () => {
-      document.removeEventListener('mouseup', onDragEnd);
-      document.removeEventListener('dragend', onDragEnd);
-      document.removeEventListener('touchend', onDragEnd);
+      board.removeEventListener('mouseup', onDragEnd);
+      board.removeEventListener('dragend', onDragEnd);
+      board.removeEventListener('touchend', onDragEnd);
 
-      document.removeEventListener('drag', onDrag);
-      document.removeEventListener('mousemove', onDrag);
-      document.removeEventListener('touchmove', onDrag);
+      board.removeEventListener('drag', onDrag);
+      board.removeEventListener('mousemove', onDrag);
+      board.removeEventListener('touchmove', onTouchMove);
       setMousePos(null);
     };
-  }, [dragging]);
+  }, [dragging, element.current]);
 
-  const marginLeft =
-    dragging && mousePos ? mousePos.x - size : padding + i * spacing - size / 2;
-  const marginTop =
-    dragging && mousePos ? mousePos.y - size : padding + j * spacing - size / 2;
+  if (dragging && mousePos) {
+    const parentLeft =
+      element.current?.parentElement?.getBoundingClientRect().left;
+    const parentTop =
+      element.current?.parentElement?.getBoundingClientRect().top;
+    const marginLeft =
+      mousePos.x - size / 2 - (parentLeft == null ? 0 : parentLeft);
+    const marginTop =
+      mousePos.y - size / 2 - (parentTop == null ? 0 : parentTop);
 
-  return [marginLeft, marginTop, setDragging];
+    return [marginLeft, marginTop, setDragging];
+  } else {
+    return [
+      padding + i * spacing - size / 2,
+      padding + j * spacing - size / 2,
+      setDragging,
+    ];
+  }
 }

@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, ReactElement } from 'react';
+import React, { MouseEventHandler, ReactElement, useRef } from 'react';
 
 import Ghosted from '../../common/Ghosted';
 import Goat from '../../common/Goat';
@@ -24,8 +24,10 @@ export default function GoatPiece({
   const [state, stateDispatch] = useGameState();
   const gameContext = useGameContext()[0];
   const size = selected ? 90 : 70;
+  const goat = useRef<HTMLImageElement>(null);
 
   const [marginLeft, marginTop, setDragging] = useDraggablePiece(
+    goat,
     size,
     boardSize,
     position
@@ -44,10 +46,10 @@ export default function GoatPiece({
   };
 
   const pieceDragged: MouseEventHandler<HTMLImageElement> = (e) => {
-    setDragging(true);
-    e.preventDefault();
     if (gameOver(gameContext)) return;
     if (isTurn(state, gameContext.designation)) {
+      setDragging(true);
+      e.preventDefault();
       stateDispatch({ type: 'select', value: position });
     } else {
       stateDispatch({ type: 'selected_without_turn' });
@@ -56,6 +58,7 @@ export default function GoatPiece({
 
   const element = (
     <Goat
+      ref={goat}
       onMouseDown={pieceDragged}
       onClick={pieceClicked}
       style={{

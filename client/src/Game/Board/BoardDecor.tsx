@@ -16,13 +16,30 @@ export default function BoardDecor({ width, height }: Props): ReactElement {
 
   useEffect(() => {
     if (gameOver(gameContext)) return;
-    const board = boardRef.current!;
+    const boardImage = boardRef.current!;
+    // @ts-ignore
+    const board: HTMLDivElement = boardImage.parentElement!;
 
-    const onDragEnd = (e: DragEvent | MouseEvent | TouchEvent) => {
+    const onDragEnd = (e: DragEvent | MouseEvent) => {
+      if (!isTurn(state, gameContext.designation)) return;
       e.preventDefault();
+
+      const boardPosition = getNearestBoardPosition(
+        e.clientX,
+        e.clientY,
+        board
+      );
+      if (boardPosition == null) {
+        stateDispatch({ type: 'select', value: boardPosition });
+      } else {
+        stateDispatch({ type: 'move', value: boardPosition });
+      }
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
       if (!isTurn(state, gameContext.designation)) return;
 
-      const _e = e instanceof TouchEvent ? e.changedTouches.item(0) : e;
+      const _e = e.changedTouches.item(0);
       if (_e == null) {
         return null;
       }
@@ -57,15 +74,15 @@ export default function BoardDecor({ width, height }: Props): ReactElement {
     };
 
     board.addEventListener('click', onClick);
-    document.addEventListener('mouseup', onDragEnd);
-    document.addEventListener('dragend', onDragEnd);
-    document.addEventListener('touchend', onDragEnd);
+    board.addEventListener('mouseup', onDragEnd);
+    board.addEventListener('dragend', onDragEnd);
+    board.addEventListener('touchend', onTouchEnd);
 
     return () => {
       board.removeEventListener('click', onClick);
-      document.removeEventListener('mouseup', onDragEnd);
-      document.removeEventListener('dragend', onDragEnd);
-      document.removeEventListener('touchend', onDragEnd);
+      board.removeEventListener('mouseup', onDragEnd);
+      board.removeEventListener('dragend', onDragEnd);
+      board.removeEventListener('touchend', onTouchEnd);
     };
   }, [boardRef.current, state.moves, gameContext.designation]);
 

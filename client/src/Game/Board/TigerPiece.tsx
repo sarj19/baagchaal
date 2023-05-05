@@ -1,4 +1,4 @@
-import React, { EventHandler, ReactElement, UIEvent } from 'react';
+import React, { EventHandler, ReactElement, UIEvent, useRef } from 'react';
 
 import Highlight from '../../common/Highlight';
 import Tiger from '../../common/Tiger';
@@ -24,8 +24,10 @@ export default function TigerPiece({
   const [state, stateDispatch] = useGameState();
   const gameContext = useGameContext()[0];
   const size = selected ? 90 : 70;
+  const tiger = useRef<HTMLImageElement>(null);
 
   const [marginLeft, marginTop, setDragging] = useDraggablePiece(
+    tiger,
     size,
     boardSize,
     position
@@ -47,16 +49,18 @@ export default function TigerPiece({
     e.preventDefault();
     if (gameOver(gameContext)) return;
 
-    setDragging(true);
     if (isTurn(state, gameContext.designation)) {
+      setDragging(true);
       stateDispatch({ type: 'select', value: position });
     } else {
+      setDragging(false);
       stateDispatch({ type: 'selected_without_turn' });
     }
   };
 
   const element = (
     <Tiger
+      ref={tiger}
       onMouseDown={pieceDragged}
       onTouchStart={pieceDragged}
       onClick={pieceClicked}

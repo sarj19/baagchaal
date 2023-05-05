@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
 import tiger from './tiger.svg';
 
@@ -10,6 +10,8 @@ type Props = Omit<
   'src'
 >;
 
-export default function Tiger(props: Props) {
-  return <img src={tiger} {...props} />;
-}
+const Tiger = forwardRef<HTMLImageElement, Props>((props, ref) => {
+  return <img src={tiger} ref={ref} {...props} />;
+});
+
+export default Tiger;

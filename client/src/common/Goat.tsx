@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
 import goat from './goat.svg';
 
@@ -10,6 +10,8 @@ type Props = Omit<
   'src'
 >;
 
-export default function Goat(props: Props) {
-  return <img src={goat} {...props} />;
-}
+const Goat = forwardRef<HTMLImageElement, Props>((props, ref) => {
+  return <img src={goat} ref={ref} {...props} />;
+});
+
+export default Goat;
