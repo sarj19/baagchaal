@@ -1,100 +1,44 @@
-import React, { ReactElement, useEffect, useRef } from 'react';
-import { io, Socket } from 'socket.io-client';
+import '../styles/Game.css';
 
-import { ServerData } from '../common/types';
+import React, { useEffect, useState } from 'react';
+
 import useGameContext from '../reducers/useGameContext';
-import Board from './Board/Board';
+import BoardContainer from './BoardContainer';
+import Debug from './Debug';
+import GameInfoAndButtons from './GameStatus/GameInfoAndButtons';
+import GameHeader from './Header/GameHeader';
 import useGameState from './reducers/useGameState';
-import { getScoredMove } from './utils/moveSelector';
-import { gameOver, getTurn } from './utils/turn';
+import { getBoardSizeProps } from './utils/getBoardSizeProps';
+import useInitializeStates from './utils/useInitializeStates';
 
-export default function Game({
-  boardSize,
-}: {
-  boardSize: number;
-}): ReactElement {
-  const [state, stateDispatch] = useGameState();
-  const [gameContext, contextDispatch] = useGameContext();
-  const { userId, gameHash, gameType, designation, botLevel } = gameContext;
-  const prevTurn = useRef(getTurn(state));
-  const socketRef = useRef<Socket | null>(null);
+export default function Game() {
+  const [[size, isPotrait], setSizeProps] = useState(getBoardSizeProps());
+  const stateDispatch = useGameState()[1];
+  const { debug } = useGameContext()[0];
+
+  useInitializeStates(stateDispatch);
 
   useEffect(() => {
-    if (gameType == 'p2p_internet') {
-      const socket = io({ auth: { token: gameHash } })
-        .onAny((event, args) => {
-          console.log('received', event, args);
-        })
-        .onAnyOutgoing((event, args) => {
-          console.log('sending', event, args);
-        })
-        .on('connect_error', (err) => {
-          console.log(`connect_error due to ${err.message}`);
-        })
-        .on('movepiece', (data: ServerData) => {
-          // TODO verify opponent's userId after storing it for first time
-          // use opponent id instead of players count
-          if (data.gameHash == gameHash) {
-            prevTurn.current = getTurn(state) == 'goat' ? 'tiger' : 'goat';
-            stateDispatch({ type: 'server', value: data.moves });
-          }
-        })
-        .once('opponentJoined', (opponentId) => {
-          contextDispatch({ type: 'set_opponent', opponentId });
-        })
-        .emit('gamejoined', { userId, gameHash });
-
-      socketRef.current = socket;
-      return () => {
-        socket.disconnect();
-      };
+    function handleResize() {
+      setSizeProps(getBoardSizeProps());
     }
-  }, [gameType, gameHash]);
 
-  useEffect(() => {
-    if (gameOver(gameContext)) return;
-    if (gameType == 'p2p_internet') {
-      if (prevTurn.current == getTurn(state)) return;
-      prevTurn.current = getTurn(state);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
-      try {
-        socketRef!.current!.emit('movepiece', {
-          userId,
-          gameHash,
-          moves: state.moves,
-        });
-      } catch (err) {
-        // TODO user server disconnected error message
-      }
-    } else if (gameType == 'bot') {
-      // user's turn so let them play
-      if (
-        getTurn(state) == designation ||
-        designation == null ||
-        state == null
-      ) {
-        return;
-      }
-
-      stateDispatch({ type: 'bot_thinking' });
-      getScoredMove(state, botLevel ? botLevel : 2, (selectedMove) => {
-        if (selectedMove != null) {
-          const [from, to] = selectedMove;
-          // give user feel by waiting
-          stateDispatch({ type: 'select', value: from });
-          setTimeout(() => {
-            stateDispatch({ type: 'move', value: to });
-          }, 1000);
-        }
-      });
-    } else if (gameType == 'self') {
-      // update the designation after each turn as you are playing with yourself
-      contextDispatch({
-        type: 'designate',
-        value: getTurn(state),
-      });
-    }
-  }, [state.moves, gameType]);
-
-  return <Board boardSize={boardSize} />;
+  return (
+    <div className="gameContainer">
+      <div className="content">
+        <div>
+          {debug && <Debug />}
+          <GameHeader />
+          <BoardContainer boardSize={size} />
+        </div>
+        <GameInfoAndButtons fixed={isPotrait} />
+      </div>
+    </div>
+  );
 }

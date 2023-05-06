@@ -3,7 +3,8 @@ import React from 'react';
 import { createBrowserRouter, redirect } from 'react-router-dom';
 
 import { ResumeGameData } from './common/types';
-import { GameContainer } from './Game/GameContainer';
+import Game from './Game/Game';
+import GameContainer from './Game/GameContainer';
 import Home from './Home/Home';
 import Rules from './Rules/Rules';
 
@@ -13,10 +14,7 @@ export const router = createBrowserRouter(
       path: '/',
       element: <Home to="home" />,
     },
-    {
-      path: '/rules',
-      element: <Rules />,
-    },
+
     {
       path: '/join',
       element: <Home to="join" />,
@@ -34,51 +32,61 @@ export const router = createBrowserRouter(
       element: <Home to="designate" />,
     },
     {
-      path: '/game/self',
+      path: '/game',
       element: <GameContainer />,
-    },
-    {
-      path: '/game/bot',
-      element: <GameContainer />,
-    },
-    {
-      path: '/game/:gameHash',
-      element: <GameContainer />,
-      loader: async (loader): Promise<ResumeGameData | null> => {
-        const userId = window.localStorage.getItem('userId');
+      children: [
+        {
+          path: 'rules',
+          element: <Rules />,
+        },
+        {
+          path: 'self',
+          element: <Game />,
+        },
+        {
+          path: 'bot',
+          element: <Game />,
+        },
+        {
+          path: ':gameHash',
+          element: <Game />,
+          loader: async (loader): Promise<ResumeGameData | null> => {
+            const userId = window.localStorage.getItem('userId');
 
-        if (userId == null) {
-          console.error(
-            'user identity cannot be verified to join',
-            loader.params.ameHash
-          );
-          throw redirect('/');
-        }
-
-        return await axios
-          .get('/joingame', {
-            params: {
-              userId,
-              gameHash: loader.params.gameHash,
-            },
-          })
-          .then((res) => {
-            if (res.status === 200 && res.data.error == null) {
-              console.log('new game', res.data);
-              return {
-                gameType: 'p2p_internet',
-                ...res.data,
-              };
-            } else {
-              console.error(res.data.error);
-              return null;
+            if (userId == null) {
+              console.error(
+                'user identity cannot be verified to join',
+                loader.params.ameHash
+              );
+              throw redirect('/');
             }
-          })
-          .catch((err) => {
-            console.error(null);
-            return null;
-          });
-      },
+
+            return await axios
+              .get('/joingame', {
+                params: {
+                  userId,
+                  gameHash: loader.params.gameHash,
+                },
+              })
+              .then((res) => {
+                if (res.status === 200 && res.data.error == null) {
+                  console.log('new game', res.data);
+                  return {
+                    gameType: 'p2p_internet',
+                    ...res.data,
+                  };
+                } else {
+                  console.error(res.data.error);
+                  return null;
+                }
+              })
+              .catch((err) => {
+                console.error(null);
+                return null;
+              });
+          },
+        },
+      ],
     },
   ],
   {

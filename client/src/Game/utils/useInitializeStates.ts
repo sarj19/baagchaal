@@ -9,13 +9,17 @@ export default function useInitializeStates(
 ) {
   // @ts-ignore
   const loaderData: ResumeGameData = useLoaderData();
-  const [_, dispatch] = useGameContext();
+  const [gameContext, dispatch] = useGameContext();
   const { state } = useLocation();
 
   const navigate = useNavigate();
   useEffect(() => {
     if (loaderData == null && state == null) {
       navigate('/');
+      return;
+    }
+
+    if (state.gameHash == gameContext.gameHash) {
       return;
     }
 
