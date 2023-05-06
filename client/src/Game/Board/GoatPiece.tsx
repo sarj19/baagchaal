@@ -51,8 +51,6 @@ export default function GoatPiece({
       setDragging(true);
       e.preventDefault();
       stateDispatch({ type: 'select', value: position });
-    } else {
-      stateDispatch({ type: 'selected_without_turn' });
     }
   };
 

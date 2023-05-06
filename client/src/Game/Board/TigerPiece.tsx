@@ -36,12 +36,12 @@ export default function TigerPiece({
     if (gameOver(gameContext)) return;
     if (isTurn(state, gameContext.designation)) {
       if (state.selectedPiece == null || position == null) {
-        stateDispatch({ type: 'select', value: position });
+        stateDispatch({ type: "select", value: position });
       } else {
-        stateDispatch({ type: 'move', value: position });
+        stateDispatch({ type: "move", value: position });
       }
     } else {
-      stateDispatch({ type: 'selected_without_turn' });
+      stateDispatch({ type: "selected_without_turn" });
     }
   };
 
@@ -51,10 +51,9 @@ export default function TigerPiece({
 
     if (isTurn(state, gameContext.designation)) {
       setDragging(true);
-      stateDispatch({ type: 'select', value: position });
+      stateDispatch({ type: "select", value: position });
     } else {
       setDragging(false);
-      stateDispatch({ type: 'selected_without_turn' });
     }
   };
 

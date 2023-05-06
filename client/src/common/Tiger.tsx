@@ -11,7 +11,7 @@ type Props = Omit<
 >;
 
 const Tiger = forwardRef<HTMLImageElement, Props>((props, ref) => {
-  return <img src={tiger} ref={ref} {...props} />;
+  return <img alt="tiger" src={tiger} ref={ref} {...props} />;
 });
 
 export default Tiger;

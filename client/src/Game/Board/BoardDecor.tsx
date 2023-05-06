@@ -86,5 +86,5 @@ export default function BoardDecor({ width, height }: Props): ReactElement {
     };
   }, [boardRef.current, state.moves, gameContext.designation]);
 
-  return <img ref={boardRef} src={board} height={height} width={width} />;
+  return <img alt="board" ref={boardRef} src={board} height={height} width={width} />;
 }

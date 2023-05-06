@@ -14,7 +14,7 @@ export default function LeaveGameButton({ fixed }: { fixed: boolean }) {
         dispatch({ type: 'leave_game', value: true });
       }}
     >
-      {fixed ? <img src={leaveIcon} /> : 'Leave Game'}
+      {fixed ? <img alt="leave" src={leaveIcon} /> : 'Leave Game'}
     </button>
   );
 }

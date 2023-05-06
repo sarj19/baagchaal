@@ -12,7 +12,7 @@ export default function Hint({ fixed }: { fixed: boolean }) {
       className={state.hint ? 'pill activePill' : 'pill'}
       onClick={() => dispatch({ type: state.hint ? 'nohint' : 'hint' })}
     >
-      {fixed ? <img src={hintIcon} /> : 'Hint'}
+      {fixed ? <img alt="hint" src={hintIcon} /> : 'Hint'}
     </button>
   );
 }
