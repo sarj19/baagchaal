@@ -16,8 +16,13 @@
     {
       "src": "icons-192.png",
       "type": "image/png",
-      "sizes": "192x192",
-      "purpose": "any maskable"
+      "sizes": "192x192"
+    },
+    {
+      "src": "icons-maskable-240.png",
+      "type": "image/png",
+      "sizes": "240x240",
+      "purpose": "maskable"
     },
     {
       "src": "icons-512.png",
