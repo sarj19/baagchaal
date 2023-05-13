@@ -1,10 +1,14 @@
 .pill {
-  background-color: #f5db7c;
+  background-color: #FDD037;
   border: none;
   border-radius: 5px;
   text-align: center;
   font-size: 20px;
   min-height: 50px;
+}
+
+button:disabled {
+  cursor: not-allowed;
 }
 
 button.pill,
@@ -70,7 +74,7 @@ a:hover:active.pill.activePill {
 }
 .dot-pulse::before,
 .dot-pulse::after {
-  content: '';
+  content: "";
   display: inline-block;
   position: absolute;
   top: 0;

@@ -12,13 +12,13 @@ export default function GoatCounter() {
   const [state, _]: GameStateContextReducer = useGameState();
 
   return (
-    <div className="goatCountContainer pill">
-      <div className="counter">
-        {MAX_GOATS - getNumberOfGoatsPlayed(state)} / 20
+    <>
+      <div className="goatCountContainer pill">
+        Goat Left {MAX_GOATS - getNumberOfGoatsPlayed(state)}
       </div>
-      <div className="goatImage">
-        <Goat height={64} />
+      <div className="goatCountContainer pill">
+        Goat Eaten {getNumberOfGoatsPlayed(state) - state.goats.length}
       </div>
-    </div>
+    </>
   );
 }

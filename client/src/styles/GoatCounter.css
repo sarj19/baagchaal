@@ -3,16 +3,9 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  color: black;
 }
 
-.counter {
-  font-weight: 800;
-  white-space: nowrap;
-}
-.goatCountContainer > div {
+.goatCountContainer {
   padding: 0 20px;
-}
-
-.goatImage {
-  margin: -10px;
 }

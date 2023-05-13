@@ -12,12 +12,16 @@ import RulesButton from './RulesButton';
 export default function GameInfoAndButtons({ fixed }: { fixed: boolean }) {
   return (
     <>
-      {fixed && <GoatCounter />}
+      {fixed && (
+        <div className="goatCounterFixed">
+          <GoatCounter />
+        </div>
+      )}
       <div
         className={
           fixed
-            ? 'gameInfoAndButtonsContainerFixed'
-            : 'gameInfoAndButtonsContainer'
+            ? "gameInfoAndButtonsContainerFixed"
+            : "gameInfoAndButtonsContainer"
         }
       >
         {!fixed && <GoatCounter />}

@@ -15,7 +15,7 @@ export default function LeaveGame() {
   return (
     <div className="boardOverlayContainer">
       <div>Are you sure?</div>
-      <Link to="/new" className="pill leaveGameConfirmation">
+      <Link to="/" replace={true} className="pill leaveGameConfirmation">
         Yes
       </Link>
       <a

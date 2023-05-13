@@ -27,7 +27,7 @@ export function GameOver() {
   return (
     <div className="boardOverlayContainer">
       <div>{displayText}</div>
-      <Link to="/new">
+      <Link to="/" replace={true}>
         <button className="pill playNewGameButton"> Play new game </button>
       </Link>
     </div>

@@ -14,6 +14,7 @@ export default function PlayWithYourselfButton() {
         designation: 'goat',
         gameHash: new Date().getTime(),
       }}
+      replace={true}
     >
       <button className="homeButton pill">Play with yourself</button>
     </Link>

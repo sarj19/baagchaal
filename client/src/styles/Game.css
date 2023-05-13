@@ -11,7 +11,8 @@
 .content {
   margin-top: 20px;
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row-reverse;
+  flex-wrap: wrap;
   justify-content: center;
 }
 
